@@ -13,18 +13,18 @@ public class CorpusSaverInOctaveFormat {
 	private String filename;
 	private int maxIndex;
 
-	public CorpusSaverInOctaveFormat(String filename, Corpus c, int maxIndex) {
-		super();
-		this.c = c;
-		this.filename = filename;
-		this.maxIndex = maxIndex;
-	}
-
 	public CorpusSaverInOctaveFormat(String filename, Corpus c) {
 		super();
 		this.c = c;
 		this.filename = filename;
 		maxIndex = 1000000;// = pas de limite
+	}
+
+	public CorpusSaverInOctaveFormat(String filename, Corpus c, int maxIndex) {
+		super();
+		this.c = c;
+		this.filename = filename;
+		this.maxIndex = maxIndex;
 	}
 
 	public void save() {
@@ -84,10 +84,8 @@ public class CorpusSaverInOctaveFormat {
 						catAsInt = catNum.size();
 						catNum.put(c.getCategory(), catAsInt);
 
-						System.out
-								.println("Nouvelle cat: " + c.getCategory()
-										+ " " + catAsInt + "("
-										+ c.getCurrentID() + ")");
+						System.out.println(
+								"Nouvelle cat: " + c.getCategory() + " " + catAsInt + "(" + c.getCurrentID() + ")");
 					}
 
 					p.println(c.getCurrentID() + " " + catAsInt);
@@ -103,8 +101,7 @@ public class CorpusSaverInOctaveFormat {
 			output.close();
 
 		} catch (IOException e) {
-			System.err.println("Can't open file " + filename
-					+ " for writting... Saving aborted");
+			System.err.println("Can't open file " + filename + " for writting... Saving aborted");
 
 		}
 	}

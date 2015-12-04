@@ -2,8 +2,7 @@ package texte.preprocessing;
 
 import java.util.ArrayList;
 
-public class StringPrecessorChain extends ArrayList<StringProcessor> implements
-		StringProcessor {
+public class StringPrecessorChain extends ArrayList<StringProcessor> implements StringProcessor {
 
 	public StringPrecessorChain() {
 		super();
@@ -16,6 +15,7 @@ public class StringPrecessorChain extends ArrayList<StringProcessor> implements
 		add(snd);
 	}
 
+	@Override
 	public String map(String str) {
 		if (size() == 0)
 			return null;

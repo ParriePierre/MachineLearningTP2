@@ -2,9 +2,8 @@ package texte.dictionnaire;
 
 import java.util.HashMap;
 import java.util.StringTokenizer;
-
-import texte.Corpus;
-import texte.preprocessing.StringProcessor;
+import texte.*;
+import texte.preprocessing.*;
 import tools.Pair;
 
 public class DictionnaireBuilderFromCorpus {
@@ -19,6 +18,18 @@ public class DictionnaireBuilderFromCorpus {
 		this.sp = sp;
 
 		dico = new HashMap<String, Pair<Integer, Integer>>(20000);
+
+	}
+
+	private void addWord(String str) {
+
+		Pair<Integer, Integer> idcpt = dico.get(str);
+		if (idcpt == null)
+			dico.put(str, new Pair<Integer, Integer>(dico.size(), 1));
+		else {
+
+			idcpt.snd = new Integer(idcpt.snd + 1);
+		}
 
 	}
 
@@ -40,8 +51,8 @@ public class DictionnaireBuilderFromCorpus {
 
 			cpt++;
 
-//			if (cpt % 1000 == 0)
-//				System.out.println(cpt + " docs traités");
+			// if (cpt % 1000 == 0)
+			// System.out.println(cpt + " docs traités");
 
 			c.next();
 
@@ -49,18 +60,6 @@ public class DictionnaireBuilderFromCorpus {
 		System.out.println("Construction OK");
 
 		return new Dictionnaire(dico, sp);
-	}
-
-	private void addWord(String str) {
-
-		Pair<Integer, Integer> idcpt = dico.get(str);
-		if (idcpt == null)
-			dico.put(str, new Pair<Integer, Integer>(dico.size(), 1));
-		else {
-
-			idcpt.snd = new Integer(idcpt.snd + 1);
-		}
-
 	}
 
 }

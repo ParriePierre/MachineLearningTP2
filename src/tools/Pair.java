@@ -2,6 +2,18 @@ package tools;
 
 public class Pair<A, B> {
 
+	private static boolean equals(Object x, Object y) {
+
+		return (x == null && y == null) || (x != null && x.equals(y));
+
+	}
+
+	public static <A, B> Pair<A, B> of(A a, B b) {
+
+		return new Pair<A, B>(a, b);
+
+	}
+
 	public A fst;
 
 	public B snd;
@@ -14,26 +26,16 @@ public class Pair<A, B> {
 
 	}
 
-	public String toString() {
-
-		return "Pair[" + fst + "," + snd + "]";
-
-	}
-
-	private static boolean equals(Object x, Object y) {
-
-		return (x == null && y == null) || (x != null && x.equals(y));
-
-	}
-
+	@Override
 	public boolean equals(Object other) {
 
 		return other instanceof Pair && equals(fst, ((Pair) other).fst)
 
-		&& equals(snd, ((Pair) other).snd);
+				&& equals(snd, ((Pair) other).snd);
 
 	}
 
+	@Override
 	public int hashCode() {
 
 		if (fst == null)
@@ -50,9 +52,10 @@ public class Pair<A, B> {
 
 	}
 
-	public static <A, B> Pair<A, B> of(A a, B b) {
+	@Override
+	public String toString() {
 
-		return new Pair<A, B>(a, b);
+		return "Pair[" + fst + "," + snd + "]";
 
 	}
 

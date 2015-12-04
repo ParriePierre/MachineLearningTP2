@@ -8,6 +8,7 @@ package texte.preprocessing;
  */
 public class StringProcessor_LowerCase implements StringProcessor {
 
+	@Override
 	public String map(String from) {
 		/**
 		 * All the text is changed into lowercase

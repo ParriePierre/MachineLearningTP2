@@ -12,6 +12,7 @@ public class FrenchPorterStemmer implements StringProcessor {
 
 	}
 
+	@Override
 	public String map(String from) {
 		StringBuffer sb = new StringBuffer();
 

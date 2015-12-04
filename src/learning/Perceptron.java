@@ -8,31 +8,33 @@ package learning;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import texte.Corpus;
-import texte.dictionnaire.Dictionnaire;
-import texte.processing.SparseDoubleVector;
+import texte.*;
+import texte.dictionnaire.*;
+import texte.processing.*;
 
 /**
  *
  * @author slash
  */
 public class Perceptron {
-    private SparseDoubleVector W;
-    public int maxIter = 200;
-    public double epsilon = 0.0001;
-    
-    public Perceptron(Dictionnaire dico){
+	private SparseDoubleVector W;
+	public int maxIter = 200;
+	public double epsilon = 0.0001;
 
-        W = new SparseDoubleVector();
-    }
+	public Perceptron(Dictionnaire dico) {
 
-    public SparseDoubleVector getW(){
-        return W;
-    }
+		W = new SparseDoubleVector();
+	}
 
-    public SparseDoubleVector learn(ArrayList<HashMap> c){
-    }
+	public SparseDoubleVector getW() {
+		return W;
+	}
 
-    public boolean test(Corpus c){
-    }
+	public SparseDoubleVector learn(ArrayList<HashMap> c) {
+		return W;
+	}
+
+	public boolean test(Corpus c) {
+		return false;
+	}
 }

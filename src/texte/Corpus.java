@@ -4,11 +4,12 @@ import texte.dictionnaire.Dictionnaire;
 import texte.processing.SparseDoubleVector;
 
 public interface Corpus {
-	public void next(); // passer au document suivat
+	// ajout d'une representation pour le document courant
+	public void addNumericalRepresentation(Dictionnaire dico);
 
-	public boolean hasNext(); // existe-il un suivant
+	public String getAttribute(String attribut);
 
-	public void reset(); // "rembobiner au debut"
+	public String getCategory();
 
 	// sur le document courant -> id, txt, vecteur, category, attribut
 	public int getCurrentID();
@@ -17,15 +18,14 @@ public interface Corpus {
 
 	public SparseDoubleVector getCurrentTextNum();
 
-	public String getCategory();
+	public void go(int i); // deplacement pas propre (mais pratique)
 
-	public String getAttribute(String attribut);
+	public boolean hasNext(); // existe-il un suivant
+
+	public void next(); // passer au document suivat
+
+	public void reset(); // "rembobiner au debut"
 
 	// taille
 	public int size();
-
-	public void go(int i); // deplacement pas propre (mais pratique)
-
-	// ajout d'une representation pour le document courant
-	public void addNumericalRepresentation(Dictionnaire dico);
 }

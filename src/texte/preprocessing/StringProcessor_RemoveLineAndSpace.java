@@ -9,6 +9,7 @@ package texte.preprocessing;
  */
 public class StringProcessor_RemoveLineAndSpace implements StringProcessor {
 
+	@Override
 	public String map(String from) {
 
 		/**

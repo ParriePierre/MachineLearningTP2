@@ -20,6 +20,7 @@ public class StringProcessor_RemoveShortWords implements StringProcessor {
 		this.size = size;
 	}
 
+	@Override
 	public String map(String from) {
 		StringBuffer sb = new StringBuffer();
 		String[] result = from.split("[^a-zA-Z0-9]+");

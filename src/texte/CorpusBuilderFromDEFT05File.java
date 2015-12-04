@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class CorpusBuilderFromDEFT05File implements CorpusBuilder {
@@ -18,6 +17,7 @@ public class CorpusBuilderFromDEFT05File implements CorpusBuilder {
 		this.learning = learning;
 	}
 
+	@Override
 	public Corpus build() {
 
 		HashMap<Integer, String> fullID = new HashMap<Integer, String>(10000);
@@ -29,7 +29,7 @@ public class CorpusBuilderFromDEFT05File implements CorpusBuilder {
 
 		try {
 
-                    System.out.println("Loading doc ...");
+			System.out.println("Loading doc ...");
 			FileReader fr = new FileReader(new File(filename));
 			BufferedReader in = new BufferedReader(fr);
 			int cpt = 0;
@@ -69,7 +69,7 @@ public class CorpusBuilderFromDEFT05File implements CorpusBuilder {
 
 				bd.put(cpt, txt); // sauter le debut de ligne
 
-			//	System.out.println("loading doc :"+cpt+" "+id+" "+ " "+txt);
+				// System.out.println("loading doc :"+cpt+" "+id+" "+ " "+txt);
 				cpt++;
 			}
 
@@ -77,15 +77,13 @@ public class CorpusBuilderFromDEFT05File implements CorpusBuilder {
 
 			return new CorpusFromTxtFile(bd, label, fullID);
 		} catch (IOException e) {
-			System.err.println("Can't open file " + filename
-					+ " for reading... Loading aborted");
+			System.err.println("Can't open file " + filename + " for reading... Loading aborted");
 			return null;
 		} catch (NumberFormatException e) {
 			System.err.println("Problem reading numbers in: " + filename);
 			return null;
 		} catch (Exception e) {
-			System.err.println("Invalid Format : " + filename
-					+ "... Loading aborted");
+			System.err.println("Invalid Format : " + filename + "... Loading aborted");
 			return null;
 		}
 	}

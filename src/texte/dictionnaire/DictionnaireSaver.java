@@ -17,13 +17,6 @@ public class DictionnaireSaver {
 		this.dico = dico;
 	}
 
-	private void save(PrintStream p) {
-		for (String mot : dico.getHashMap().keySet()) {
-			Pair<Integer, Integer> idcpt = dico.getHashMap().get(mot);
-			p.println(mot + " " + idcpt.fst + " " + idcpt.snd);
-		}
-	}
-
 	public void save() {
 		try {
 			FileOutputStream output = new FileOutputStream(filename);
@@ -32,9 +25,15 @@ public class DictionnaireSaver {
 
 			output.close();
 		} catch (IOException e) {
-			System.err.println("Can't open file " + filename
-					+ " for writting... Saving aborted");
+			System.err.println("Can't open file " + filename + " for writting... Saving aborted");
 
+		}
+	}
+
+	private void save(PrintStream p) {
+		for (String mot : dico.getHashMap().keySet()) {
+			Pair<Integer, Integer> idcpt = dico.getHashMap().get(mot);
+			p.println(mot + " " + idcpt.fst + " " + idcpt.snd);
 		}
 	}
 

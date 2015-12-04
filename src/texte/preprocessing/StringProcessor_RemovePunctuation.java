@@ -9,6 +9,7 @@ package texte.preprocessing;
  */
 public class StringProcessor_RemovePunctuation implements StringProcessor {
 
+	@Override
 	public String map(String from) {
 
 		from = from.replaceAll("[àâäÂÄ]", "a");

@@ -28,16 +28,13 @@ public class DictionnaireBuilderFromFile {
 			in.close();
 
 			return dico;
-		}catch (FileNotFoundException e) {
-			System.err.println("Unable to find "+ filename);
-		}
-		catch (IOException e) {
-			System.err.println("Can't open file " + filename
-					+ " for reading... Loading aborted");
+		} catch (FileNotFoundException e) {
+			System.err.println("Unable to find " + filename);
+		} catch (IOException e) {
+			System.err.println("Can't open file " + filename + " for reading... Loading aborted");
 
 		} catch (Exception e) {
-			System.err.println("Invalid Format : " + filename
-					+ "... Loading aborted");
+			System.err.println("Invalid Format : " + filename + "... Loading aborted");
 
 		}
 
@@ -45,8 +42,7 @@ public class DictionnaireBuilderFromFile {
 	}
 
 	public Dictionnaire load(BufferedReader in) {
-		HashMap<String, Pair<Integer, Integer>> dico = new HashMap<String, Pair<Integer, Integer>>(
-				20000); // RAZ
+		HashMap<String, Pair<Integer, Integer>> dico = new HashMap<String, Pair<Integer, Integer>>(20000); // RAZ
 		try {
 			while (true) {
 
@@ -57,9 +53,8 @@ public class DictionnaireBuilderFromFile {
 				if (buf == null)
 					break;
 				StringTokenizer st = new StringTokenizer(buf);
-				dico.put(st.nextToken(), new Pair<Integer, Integer>(Integer
-						.parseInt(st.nextToken()), Integer.parseInt(st
-						.nextToken())));
+				dico.put(st.nextToken(),
+						new Pair<Integer, Integer>(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken())));
 			}
 
 			return new Dictionnaire(dico, null);

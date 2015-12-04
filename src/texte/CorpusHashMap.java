@@ -3,7 +3,6 @@ package texte;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Random;
 
 public abstract class CorpusHashMap implements Corpus {
 
@@ -13,25 +12,6 @@ public abstract class CorpusHashMap implements Corpus {
 
 	private int size;
 
-	public void go(int i) {
-//		if (ids == null)
-			cpt = i;
-//		else
-                    /*
-			cpt = ids.indexOf((Integer) i);
-                     *
-                     */
-
-	}
-
-	public void setCategories(HashMap<Integer, String> categories) {
-		this.categories = categories;
-	}
-
-	public CorpusHashMap(int size) {
-		this.size = size;
-	}
-
 	public CorpusHashMap(ArrayList<Integer> ids) {
 		super();
 		this.ids = ids;
@@ -39,34 +19,11 @@ public abstract class CorpusHashMap implements Corpus {
 		size = ids.size();
 	}
 
-	public void next() {
-		cpt++;
+	public CorpusHashMap(int size) {
+		this.size = size;
 	}
 
-	public void reset() {
-		cpt = 0;
-	}
-
-	public int getCurrentID() {
-		if (ids == null)
-			return cpt;
-
-                //Add
-                Iterator<Integer> itr = ids.iterator();
-                int i=0;
-                while(itr.hasNext()){
-
-                    Integer tmp = itr.next();
-
-                    if(i == cpt)
-                        return tmp;
-                    i++;
-                }
-                // End add
-
-                return ids.get(cpt);
-	}
-
+	@Override
 	public String getCategory() {
 		if (categories == null)
 			return "-1";
@@ -74,12 +31,61 @@ public abstract class CorpusHashMap implements Corpus {
 		return categories.get(getCurrentID());
 	}
 
-	public int size() {
-		return size;
+	@Override
+	public int getCurrentID() {
+		if (ids == null)
+			return cpt;
+
+		// Add
+		Iterator<Integer> itr = ids.iterator();
+		int i = 0;
+		while (itr.hasNext()) {
+
+			Integer tmp = itr.next();
+
+			if (i == cpt)
+				return tmp;
+			i++;
+		}
+		// End add
+
+		return ids.get(cpt);
 	}
 
+	@Override
+	public void go(int i) {
+		// if (ids == null)
+		cpt = i;
+		// else
+		/*
+		 * cpt = ids.indexOf((Integer) i);
+		 *
+		 */
+
+	}
+
+	@Override
 	public boolean hasNext() {
 		return (cpt < size);
+	}
+
+	@Override
+	public void next() {
+		cpt++;
+	}
+
+	@Override
+	public void reset() {
+		cpt = 0;
+	}
+
+	public void setCategories(HashMap<Integer, String> categories) {
+		this.categories = categories;
+	}
+
+	@Override
+	public int size() {
+		return size;
 	}
 
 }

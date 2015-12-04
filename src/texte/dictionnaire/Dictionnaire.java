@@ -1,31 +1,13 @@
 package texte.dictionnaire;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.StringTokenizer;
-
-import texte.Corpus;
+import texte.preprocessing.*;
 import texte.processing.*;
-
-import texte.preprocessing.FrenchPorterStemmer;
-import texte.preprocessing.StringPrecessorChain;
-import texte.preprocessing.StringProcessor;
-import texte.preprocessing.StringProcessor_LowerCase;
-import texte.preprocessing.StringProcessor_RemoveLineAndSpace;
-import texte.preprocessing.StringProcessor_RemovePunctuation;
-import texte.preprocessing.StringProcessor_RemoveShortWords;
 import tools.Pair;
 
 public class Dictionnaire implements Mapper<String, SparseDoubleVector> {
-
-	private HashMap<String, Pair<Integer, Integer>> dico;
-	private StringProcessor sp;
 
 	public static StringProcessor standardStringProcessor() {
 
@@ -38,9 +20,11 @@ public class Dictionnaire implements Mapper<String, SparseDoubleVector> {
 
 		return sp;
 	}
+	private HashMap<String, Pair<Integer, Integer>> dico;
 
-	public Dictionnaire(HashMap<String, Pair<Integer, Integer>> dico,
-			StringProcessor sp) {
+	private StringProcessor sp;
+
+	public Dictionnaire(HashMap<String, Pair<Integer, Integer>> dico, StringProcessor sp) {
 		this.dico = dico;
 		this.sp = sp;
 	}
@@ -57,6 +41,10 @@ public class Dictionnaire implements Mapper<String, SparseDoubleVector> {
 			dico.remove(str);
 	}
 
+	public HashMap<String, Pair<Integer, Integer>> getHashMap() {
+		return dico;
+	}
+
 	public int getID(String str) {
 		Pair<Integer, Integer> cptid = dico.get(str);
 		if (cptid == null)
@@ -69,6 +57,10 @@ public class Dictionnaire implements Mapper<String, SparseDoubleVector> {
 		if (cptid == null)
 			return -1;
 		return cptid.snd;
+	}
+
+	public int getWordCount() {
+		return this.dico.size();
 	}
 
 	public SparseDoubleVector map(String f) {
@@ -86,12 +78,4 @@ public class Dictionnaire implements Mapper<String, SparseDoubleVector> {
 		return v;
 
 	}
-
-	public HashMap<String, Pair<Integer, Integer>> getHashMap() {
-		return dico;
-	}
-
-        public int getWordCount(){
-            return this.dico.size();
-        }
 }

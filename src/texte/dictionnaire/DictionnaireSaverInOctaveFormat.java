@@ -51,8 +51,7 @@ public class DictionnaireSaverInOctaveFormat {
 
 			output.close();
 		} catch (IOException e) {
-			System.err.println("Can't open file " + filename
-					+ " for writting... Saving aborted");
+			System.err.println("Can't open file " + filename + " for writting... Saving aborted");
 
 		}
 

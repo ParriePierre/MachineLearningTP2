@@ -23,8 +23,8 @@ public class CorpusAddNumericalRepresentation {
 			c.addNumericalRepresentation(dico);
 			c.next();
 
-	//		if (cpt % 1000 == 0)
-	//			System.out.println(cpt + " docs traites");
+			// if (cpt % 1000 == 0)
+			// System.out.println(cpt + " docs traites");
 			cpt++;
 		}
 		System.out.println("calcul OK");
