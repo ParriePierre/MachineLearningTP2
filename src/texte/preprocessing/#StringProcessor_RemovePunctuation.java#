@@ -1,0 +1,24 @@
+package texte.preprocessing;
+
+
+/**
+ * Remove all the punctuation and replace all the accented letter with non accented letter from the String
+ * @author guillaumes
+ *
+ */
+public class StringProcessor_RemovePunctuation  implements StringProcessor {
+
+	public String map(String from) {
+		
+		from=from.replaceAll("[ˆ‰Šå€]", "a");
+		from=from.replaceAll("[‘æè]", "e");
+		from=from.replaceAll("[”•ëì]", "i");
+		from=from.replaceAll("[™šï…]", "o");
+		from=from.replaceAll("[Ÿó†]", "u");
+		from=from.replaceAll("", "c");
+		from=from.replaceAll("[^A-Za-z0-9]", " ");
+		return(from);
+		
+	}
+
+}
