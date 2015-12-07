@@ -8,51 +8,50 @@ package learning;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import texte.*;
-import texte.dictionnaire.*;
-import texte.processing.*;
+import texte.Corpus;
+import texte.dictionnaire.Dictionnaire;
+import texte.processing.SparseDoubleVector;
 
 /**
  *
  * @author slash
  */
 public class Perceptron {
-	private SparseDoubleVector W;
-	public int maxIter = 200;
-	public double epsilon = 0.0001;
+    private SparseDoubleVector W;
+    public int maxIter = 200;
+    public double epsilon = 0.0001;
+    
+    public Perceptron(Dictionnaire dico){
 
-	public Perceptron(Dictionnaire dico) {
-		W = new SparseDoubleVector();
-	}
+        W = new SparseDoubleVector();
+    }
 
-	public SparseDoubleVector getW() {
-		return W;
-	}
+    public SparseDoubleVector getW(){
+        return W;
+    }
 
-	//Test - predit - compare - compte % erreur
-	public SparseDoubleVector learn(ArrayList<HashMap> c) {
-		for(int i = 0; i<maxIter;i++)
-		{
-			c.forEach(h -> {
-				SparseDoubleVector x = (SparseDoubleVector) h.get("vector");
-				double y;
-				if(h.get("label").equals("C"))
-					y=1;
-				else
-					y= -1;
-				
-				SparseDoubleVector r = x.prod(y);
-				if(W.prodScal(r) <= 0)
-				{
-					r = r.prod(epsilon);
-					W = W.plus(r);
-				}
-			});	
-		}		
-		return W;
-	}
+    public SparseDoubleVector learn(ArrayList<HashMap> c){
+       System.out.println("Learning...");
 
-	public boolean test(Corpus c) {
-		return false;
-	}
+       for(int m=0; m < this.maxIter; m++){
+
+           for(HashMap t : c){
+               Double Y = Double.parseDouble(t.get("label").equals("C")?"-1":"1");
+
+               SparseDoubleVector X = (SparseDoubleVector)t.get("vector");
+               SparseDoubleVector res = X.prod(Y);
+
+               if(this.W.prodScal(res) <= 0){
+                     res = res.prod(epsilon);
+                     this.W = this.W.plus(res);
+                 }
+           }
+           epsilon *= 0.99;
+        }
+        return this.W;
+    }
+    
+    //Test du perceptron sur l'ensemble du corpus. Permet de déterminer si le perceptron est fort ou faible
+    /*public boolean test(Corpus c){
+    }*/
 }

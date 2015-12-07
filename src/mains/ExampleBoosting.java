@@ -1,0 +1,174 @@
+package mains;
+
+//import ihm.PlotFrame;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.HashMap;
+import learning.Boosting;
+import texte.Corpus;
+import texte.CorpusAddNumericalRepresentation;
+import texte.CorpusBuilderFromDEFT05File;
+import texte.CorpusFromTxtFile;
+import texte.dictionnaire.Dictionnaire;
+import texte.dictionnaire.DictionnaireBuilderFromCorpus;
+import texte.preprocessing.*;
+
+public class ExampleBoosting {
+	public static void main(String[] args) throws IOException {
+
+            String fileLearning = "data/corpus.tache1.learn.utf8";
+            String fileTest = "";
+            String filePrediction = "";
+            String filePredictionOutput = "";
+
+            int verbose =0;
+            int perceptronCount = 40;
+            double extractRate = 0.05;
+            double epsilon = 0.0001;
+            int max_iter = 200;
+
+            try{
+                for(int i =0; i< args.length; i++){
+
+                    if(args[i].equals("--file-learning"))
+                        fileLearning = args[++i];
+
+                    else if(args[i].equals("--file-test"))
+                        fileTest = args[++i];
+
+                    else if(args[i].equals("--file-prediction"))
+                        filePrediction = args[++i];
+
+                    else if(args[i].equals("--file-prediction-output"))
+                        filePredictionOutput = args[++i];
+
+                    else if(args[i].equals("--verbose"))
+                        verbose = Integer.parseInt(args[++i]);
+
+                    else if(args[i].equals("--rate-extraction"))
+                        extractRate = Double.parseDouble(args[++i]);
+
+                    else if(args[i].equals("--perceptron-count"))
+                        perceptronCount =  Integer.parseInt(args[++i]);
+
+                    else if(args[i].equals("--perceptron-iteration-max"))
+                        max_iter =  Integer.parseInt(args[++i]);
+
+                    else if(args[i].equals("--perceptron-epsilon"))
+                        epsilon =  Double.parseDouble(args[++i]);
+
+                    else throw new Exception("Help");
+                    
+                }
+            }
+            catch(Exception e){
+                System.out.println("Boosting with perceptron v0.3");
+                System.out.println("Author : DUHART Clement 11/01/11\n");
+                System.out.println("java -jar boosting [options]\n");
+                System.out.println("Options :\n ");
+                System.out.println("\t--file-learning [FILE PATH]\n\t\tFile in use for learning. Default : "+fileLearning+"\n");
+                System.out.println("\t--file-test [FILE PATH]\n\t\tFile in use for test with label. By default non evaluation.\n");
+                System.out.println("\t--file-prediction [FILE PATH]\n\t\tFile for making prediction without label. By default non evaluation.\n");
+                System.out.println("\t--file-prediction-output [FILE PATH]\n\t\tFile in use for storing prediction without label label. By default non evaluation.\n");
+                System.out.println("\t--verbose INTEGER\n\t\tDefault : 0\n\t\tVerbose level : \n\t\t\t1 - Print on console \n\t\t\t2 - Draw graphical chart of boosting result on learn set for each iteration\n\t\t\t3 -  Draw graphical charts of boosting result on learn and test set for each iteration\n");
+                System.out.println("\t--rate-extraction RATE_DOUBLE\n\t\tExtraction rate of example for each perceptron\n");
+                System.out.println("\t--perceptron-count COUNT\n\t\tCount of perceptron in use for boosting\n");
+                System.out.println("\t--perceptron-iteration-max COUNT\n\t\tCount of iteration by perceptron. Default : 200\n");
+                System.out.println("\t--perceptron-epsilon COUNT\n\t\tEpsilon value of the perceptron. Default : 0.0001\n");
+
+
+                System.out.println("\t--help\n\t\tThis help menu\n");
+                return ;
+            }
+
+		boolean learningStage = true;
+		CorpusBuilderFromDEFT05File builder = new CorpusBuilderFromDEFT05File(fileLearning, learningStage);
+		Corpus c = builder.build();
+		StringProcessor sp = Dictionnaire.standardStringProcessor();
+
+		DictionnaireBuilderFromCorpus dicoBuilder =
+			new DictionnaireBuilderFromCorpus(c, sp);
+		Dictionnaire dico = dicoBuilder.build();
+
+		// transformation des documents sous formes numeriques
+		CorpusAddNumericalRepresentation builderNum =
+			new CorpusAddNumericalRepresentation(c, dico);
+		builderNum.build();
+
+                Corpus cTest = null;
+                if(!fileTest.isEmpty()){
+                    // chargement corpus
+                    CorpusBuilderFromDEFT05File builderTest = new CorpusBuilderFromDEFT05File(fileTest, learningStage);
+                    cTest = builderTest.build();
+
+                    // transformation des documents sous formes numeriques
+                    CorpusAddNumericalRepresentation builderNumTest =
+                            new CorpusAddNumericalRepresentation(cTest, dico);
+                    builderNumTest.build();
+                }
+
+                // Learning
+                System.out.println("Learning ...");
+                c.reset();
+
+                Boosting bost = new Boosting(dico);
+                bost.PLOT_VERBOSE = verbose;
+                bost.EXTRACT_RATE = extractRate;
+                bost.PECPTRON_COUNT = perceptronCount;
+                bost.EPSILON = epsilon;
+                bost.MAX_ITER = max_iter;
+                bost.learn(c,cTest);
+                
+                bost.printErrors(c);
+                
+                /*PlotFrame f = new PlotFrame();
+                f.setTitle("Final result on learn set");
+                bost.print(c,f);
+                bost.print_density();*/
+                
+
+                if(!fileTest.isEmpty()){
+                    System.out.println("-------------------\nEvaluation on test set with label\n-------------------\n");
+                    /*PlotFrame f2 = new PlotFrame();
+                    f2.setTitle("Final result on test set");
+                    bost.print(cTest,f2);*/
+                    bost.printErrors(cTest);
+                }
+
+                if(!filePrediction.isEmpty()){
+                    System.out.println("-------------------\nPrediction on test set without label\n-------------------\n");
+
+                    // chargement corpus
+                    builder = new CorpusBuilderFromDEFT05File(filePrediction, false);
+                    Corpus cT = builder.build();
+                    // transformation des documents sous forme numeriques
+                    CorpusAddNumericalRepresentation builderNumPredict = new CorpusAddNumericalRepresentation(
+                                    cT, dico);
+                    builderNumPredict.build();
+
+                    PrintWriter output = null;
+                    if(!filePredictionOutput.isEmpty())
+                        output = new PrintWriter(new BufferedWriter (new FileWriter(filePredictionOutput)));
+
+                    cT.reset();
+                    Double cl = 0.0;
+                    while(cT.hasNext()){
+                        if(bost.H(cT.getCurrentTextNum()) >= 0.0) {
+                            if (output!= null)         output.println("M");
+                            System.out.println("Classe M evaluée pour : "+cT.getCurrentText());
+                        }
+                        else {
+                            if(output != null)          output.println("C");
+                            System.out.println("Classe C evaluée pour : "+cT.getCurrentText());
+                        }
+                        cT.next();
+                    }
+
+                    output.close();
+                }
+
+	}
+
+}
