@@ -5,7 +5,7 @@
 
 package learning;
 
-//import ihm.PlotFrame;
+import ihm.PlotFrame;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
@@ -31,9 +31,9 @@ public class Boosting {
 	public Double EPSILON = 0.0001;
 	public int MAX_ITER = 200;
 
-	// PlotFrame density = null;
-	// PlotFrame resultLearnSet = null;
-	// PlotFrame resultTestSet = null;
+	PlotFrame density = null;
+	PlotFrame resultLearnSet = null;
+	PlotFrame resultTestSet = null;
 
 	public Boosting(Dictionnaire dico) {
 		this.dico = dico;
@@ -41,21 +41,30 @@ public class Boosting {
 
 	}
 
-	/*
-	 * public void print(Corpus c, PlotFrame f){
-	 * 
-	 * if(c == null || f == null) return; System.out.println("Printing ...");
-	 * 
-	 * f.clean(); c.reset(); int i=0; while(c.hasNext()){ String categ =
-	 * c.getCategory(); Double x,y;
-	 * 
-	 * SparseDoubleVector tmp = c.getCurrentTextNum(); y = _H(i,tmp); x =
-	 * Double.parseDouble(""+i); f.addPoint(x, y, (categ.equals("C")?0:1));
-	 * 
-	 * i++; c.next(); }
-	 * 
-	 * f.repaint(); }
-	 */
+	public void print(Corpus c, PlotFrame f) {
+
+		if (c == null || f == null)
+			return;
+		System.out.println("Printing ...");
+
+		f.clean();
+		c.reset();
+		int i = 0;
+		while (c.hasNext()) {
+			String categ = c.getCategory();
+			Double x, y;
+
+			SparseDoubleVector tmp = c.getCurrentTextNum();
+			y = _H(i, tmp);
+			x = Double.parseDouble("" + i);
+			f.addPoint(x, y, (categ.equals("C") ? 0 : 1));
+
+			i++;
+			c.next();
+		}
+
+		f.repaint();
+	}
 
 	public void printErrors(Corpus c) {
 		Random r = new Random();
@@ -146,9 +155,9 @@ public class Boosting {
 			net.epsilon = EPSILON;
 			net.maxIter = MAX_ITER;
 			TabW.add(net.learn(c_tmp));
-			//net.test(c);
+			// net.test(c);
 
-			//Calcul de l'erreur totale
+			// Calcul de l'erreur totale
 			Double E = 0.0;
 			c.reset();
 			int i = 0;
@@ -164,7 +173,7 @@ public class Boosting {
 			TabAlpha.set(j, 0.5 * Math.log((1 - E) / E));
 			System.out.println("Error " + (error.get(j) * 100) + "% Alpha:" + TabAlpha.get(j));
 
-			//Update scheme
+			// PDDD Update scheme (formule dans le cours)
 			c.reset();
 			i = 0;
 			double exp = 0.0;
@@ -182,7 +191,7 @@ public class Boosting {
 				i++;
 			}
 
-			//Normalization
+			// Normalization (formule dans le cours)
 			Double sum = 0.0;
 			for (i = 0; i < D.size(); i++) {
 				sum += D.get(i);
@@ -192,9 +201,8 @@ public class Boosting {
 				D.set(i, D.get(i) / sum);
 
 			System.out.println("[SUCCESS]");
-			
 
-			/*switch (PLOT_VERBOSE) {
+			switch (PLOT_VERBOSE) {
 			case 3:
 				if (resultTestSet == null)
 					resultTestSet = new PlotFrame();
@@ -216,28 +224,28 @@ public class Boosting {
 				printErrors(c);
 			case 1:
 
-			}*/
+			}
 		}
 
 	}
 
-	/*public void print_density() {
+	public void print_density() {
 		if (density == null)
 			density = new PlotFrame();
 		density.clean();
 		for (int i = 0; i < D.size(); i++)
 			density.addPoint(i + 0.0, D.get(i), 3);
 		density.repaint();
-	}*/
+	}
 
-	//MonteCarlo
+	// MonteCarlo
 	public ArrayList extractSegmentCorpus(Corpus c, Double rate) {
 		Random r = new Random();
 		Double size = Double.parseDouble("" + c.size());
 		Double D_tmp[] = new Double[c.size()];
 		ArrayList<HashMap> res = new ArrayList(c.size());
 
-		//Generation de la distribution cumulée
+		// Generation de la distribution cumulée
 		D_tmp[0] = D.get(0);
 		for (int i = 1; i < D.size(); i++)
 			D_tmp[i] = D_tmp[i - 1] + D.get(i);
